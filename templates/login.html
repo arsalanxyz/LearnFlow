@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>LearnFlow- Login</title>
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+  >
+</head>
+
+<body>
+
+  <div class="auth-container">
+
+    <div class="auth-card">
+
+      <!-- Logo -->
+      <div class="logo">
+        <h1>LearnFlow </h1>
+
+        <p>"A Quiz and Learning Portal"</p>
+      </div>
+
+      <h2>Welcome Back</h2>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <p class="message">{{ message }}</p>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <!-- Login Form -->
+      <form method="POST">
+
+        <div class="input-group">
+          <label>Email Address</label>
+
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            value="{{ entered_email | default('') }}"
+            required
+          >
+        </div>
+
+        <div class="input-group">
+          <label>Password</label>
+
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+          >
+        </div>
+
+        <button
+          type="submit"
+          class="main-button"
+        >
+          Login
+        </button>
+
+      </form>
+
+      <!-- Forgot Password -->
+      {% if show_forgot_password %}
+
+        <p class="message">
+          Invalid email or password.
+        </p>
+
+        <form
+          action="{{ url_for('forgot_password') }}"
+          method="POST"
+        >
+          <button
+            type="submit"
+            class="forgot-password-button"
+          >
+            Forgot Password?
+          </button>
+        </form>
+
+      {% endif %}
+
+      <!-- Register Link -->
+      <p class="bottom-text">
+        Don't have an account?
+
+        <a href="{{ url_for('register') }}">
+          Register
+        </a>
+      </p>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

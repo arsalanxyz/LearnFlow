@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Quiz - LearnFlow</title>
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+  >
+</head>
+
+<body>
+  <header class="navbar">
+    <h1>LearnFlow</h1>
+
+    <a
+      href="{{ url_for('study_material', topic=topic) }}"
+      class="back-button"
+    >
+      ← Back to Study Material
+    </a>
+  </header>
+
+  <main class="quiz-page">
+    <div class="quiz-card">
+      <h2>Topic Quiz</h2>
+
+      <p class="quiz-instruction">
+        Answer all questions and submit your quiz to see the result.
+      </p>
+
+      <form
+        action="{{ url_for('submit_quiz', topic=topic) }}"
+        method="POST"
+      >
+        {% for question in questions %}
+          {% set question_index = loop.index0 %}
+
+          <div class="question-card">
+            <h3>
+              Question {{ loop.index }}
+            </h3>
+
+            <p class="question-text">
+              {{ question.question }}
+            </p>
+
+            {% for option in question.options %}
+              <label class="option-label">
+                <input
+                  type="radio"
+                  name="question_{{ question_index }}"
+                  value="{{ option }}"
+                  required
+                >
+
+                <span>
+                  {{ option }}
+                </span>
+              </label>
+            {% endfor %}
+          </div>
+        {% endfor %}
+
+        <button
+          type="submit"
+          class="submit-quiz-button"
+        >
+          Submit Quiz
+        </button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

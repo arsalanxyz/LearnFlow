@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>{{ material.title }} - LearnFlow</title>
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+  >
+</head>
+
+<body>
+  <!-- Navigation bar -->
+  <header class="navbar">
+    <h1>LearnFlow</h1>
+
+    <a
+      href="{{ url_for('dashboard') }}"
+      class="back-button"
+    >
+      ← Back to Dashboard
+    </a>
+  </header>
+
+  <!-- Study material -->
+  <main class="study-page">
+    <div class="study-card">
+      <p class="subject-name">
+        {{ material.subject }}
+      </p>
+
+      <h2>
+        {{ material.title }}
+      </h2>
+
+      <div class="study-content">
+        {{ material.content }}
+      </div>
+
+      <div class="study-actions">
+        <a
+          href="{{ url_for('dashboard') }}"
+          class="back-to-dashboard"
+        >
+          Back
+        </a>
+
+        <a
+          href="{{ url_for('quiz', topic=material.topic_id) }}"
+          class="quiz-button"
+        >
+          Take Quiz
+        </a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

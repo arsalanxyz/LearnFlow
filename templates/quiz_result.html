@@ -1,0 +1,118 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
+>
+
+  <title>Quiz Result - LearnFlow</title>
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+  >
+</head>
+
+<body>
+
+  <!-- Navbar -->
+
+  <header class="navbar">
+    <h1>LearnFlow</h1>
+
+
+<a
+  href="{{ url_for('dashboard') }}"
+  class="back-button"
+>
+  ← Back to Dashboard
+</a>
+
+
+  </header>
+
+  <!-- Quiz Result -->
+
+  <main class="result-page">
+    <div class="result-card">
+
+
+  <h2>Quiz Result</h2>
+
+  <!-- Score -->
+  <div class="score-box">
+    <h3>{{ score }} / {{ total }}</h3>
+
+    <p>
+      Score: {{ "%.0f"|format(percentage) }}%
+    </p>
+  </div>
+
+  <!-- Answer Review -->
+  <h2 class="answer-review-title">
+    Answer Review
+  </h2>
+
+  {% for result in results %}
+
+  <div
+    class="answer-review {% if result.is_correct %}correct-answer{% else %}wrong-answer{% endif %}"
+  >
+
+    <h3>
+      Question {{ loop.index }}
+    </h3>
+
+    <p>
+      <strong>
+        {{ result.question }}
+      </strong>
+    </p>
+
+    <p>
+      <strong>Your answer:</strong>
+
+      {{ result.selected_answer or "Not answered" }}
+    </p>
+
+    <p>
+      <strong>Correct answer:</strong>
+
+      {{ result.correct_answer }}
+    </p>
+
+  </div>
+
+  {% endfor %}
+
+  <!-- Actions -->
+  <div class="result-actions">
+
+    <a
+      href="{{ url_for('quiz', topic=topic) }}"
+      class="retry-button"
+    >
+      Retry Quiz
+    </a>
+
+    <a
+      href="{{ url_for('dashboard') }}"
+      class="back-to-dashboard"
+    >
+      Dashboard
+    </a>
+
+  </div>
+
+</div>
+
+
+  </main>
+
+</body>
+</html>

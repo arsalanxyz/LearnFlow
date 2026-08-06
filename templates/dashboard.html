@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>LearnFlow</title>
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+  >
+</head>
+
+<body>
+
+  <script>
+    function toggleAccountMenu() {
+      document
+        .querySelector(".account-menu")
+        .classList.toggle("active");
+    }
+  </script>
+
+  <!-- Navbar -->
+  <header class="navbar">
+
+    <h1>LearnFlow<div class="tagline">A Quiz & Learning Portal</div></h1>
+    
+
+    <div class="account-menu">
+
+      <button
+        type="button"
+        class="account-button"
+        onclick="toggleAccountMenu()"
+      >
+        My Account ▼
+      </button>
+
+      <div class="account-dropdown">
+
+        <!-- User Details -->
+        <div class="account-details">
+
+          <p>
+            <strong>Name:</strong>
+            {{ user_name }}
+          </p>
+
+          <p>
+            <strong>Email:</strong>
+            {{ user_email }}
+          </p>
+
+          <p>
+            <a
+              href="{{ url_for('my_progress') }}"
+              class="account-progress"
+            >
+              My Progress
+            </a>
+          </p>
+
+          <p>
+            <a
+              href="{{ url_for('reset_password') }}"
+              class="account-reset"
+            >
+              Reset Password
+            </a>
+          </p>
+
+          <p>
+            <a
+              href="{{ url_for('logout') }}"
+              class="account-logout"
+            >
+              Logout
+            </a>
+          </p>
+
+        </div>
+
+        <!-- Delete Account -->
+        <form
+          action="{{ url_for('delete_account') }}"
+          method="POST"
+          onsubmit="return confirm('Are you sure you want to permanently delete your account? This action cannot be undone.');"
+        >
+          <button
+            type="submit"
+            class="account-delete"
+          >
+            Delete Account
+          </button>
+        </form>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- Dashboard -->
+  <main class="dashboard">
+
+    <div class="welcome-section">
+      <h2>Welcome, {{ user_name }}!</h2>
+
+      <p>Select a topic and start learning.</p>
+    </div>
+
+    <!-- Computer Networks -->
+    <h2 class="section-title">
+      Computer Networks
+    </h2>
+
+    <div class="topic-container">
+
+      <div class="topic-card">
+        <h3>OSI Model</h3>
+
+        <p>
+          Learn about the seven layers of the OSI model.
+        </p>
+
+        <a
+          href="{{ url_for('study_material', topic='osi-model') }}"
+          class="start-learning-button"
+        >
+          Start Learning
+        </a>
+      </div>
+
+      <div class="topic-card">
+        <h3>DNS</h3>
+
+        <p>
+          Understand how domain names are converted into IP addresses.
+        </p>
+
+        <a
+          href="{{ url_for('study_material', topic='dns') }}"
+          class="start-learning-button"
+        >
+          Start Learning
+        </a>
+      </div>
+
+      <div class="topic-card">
+        <h3>HTTP</h3>
+
+        <p>
+          Learn how web browsers communicate with web servers.
+        </p>
+
+        <a
+          href="{{ url_for('study_material', topic='http') }}"
+          class="start-learning-button"
+        >
+          Start Learning
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Python -->
+    <h2
+      class="section-title"
+      style="margin-top: 40px;"
+    >
+      Python
+    </h2>
+
+    <div class="topic-container">
+
+      <div class="topic-card">
+        <h3>Python Basics</h3>
+
+        <p>
+          Learn Python syntax, variables, data types, input, and output.
+        </p>
+
+        <a
+          href="{{ url_for('study_material', topic='python-basics') }}"
+          class="start-learning-button"
+        >
+          Start Learning
+        </a>
+      </div>
+
+      <div class="topic-card">
+        <h3>Lists and Tuples</h3>
+
+        <p>
+          Understand Python lists and tuples, their features and basic operations.
+        </p>
+
+        <a
+          href="{{ url_for('study_material', topic='lists-tuples') }}"
+          class="start-learning-button"
+        >
+          Start Learning
+        </a>
+      </div>
+
+      <div class="topic-card">
+        <h3>Functions</h3>
+
+        <p>
+          Learn how to create and use functions, parameters, arguments and return values.
+        </p>
+
+        <a
+          href="{{ url_for('study_material', topic='functions') }}"
+          class="start-learning-button"
+        >
+          Start Learning
+        </a>
+      </div>
+
+    </div>
+
+  </main>
+
+</body>
+</html>

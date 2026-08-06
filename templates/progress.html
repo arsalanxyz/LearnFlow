@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>LearnFlow- My Progress</title>
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+  >
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <h1>LearnFlow</h1>
+
+    <a
+      href="{{ url_for('dashboard') }}"
+      class="progress-dashboard-button"
+    >
+      Dashboard
+    </a>
+  </header>
+
+  <!-- Progress -->
+  <main class="progress-page">
+
+    <div class="progress-heading">
+      <h2>My Learning Progress</h2>
+
+      <p>
+        View your saved quiz attempts and performance.
+      </p>
+    </div>
+
+    {% if reports %}
+
+    <div class="progress-table-container">
+
+      <table class="progress-table">
+
+        <thead>
+          <tr>
+            <th>Topic</th>
+            <th>Score</th>
+            <th>Percentage</th>
+            <th>Performance</th>
+            <th>Attempted On</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          {% for report in reports %}
+
+          <tr>
+
+            <td>{{ report.topic }}</td>
+
+            <td>
+              {{ report.score }} / {{ report.total_questions }}
+            </td>
+
+            <td>
+              {{ "%.0f"|format(report.percentage) }}%
+            </td>
+
+            <td>
+              <span
+                class="performance-badge {{ report.performance_level | lower | replace(' ', '-') }}"
+              >
+                {{ report.performance_level }}
+              </span>
+            </td>
+
+            <td>
+              {{ report.attempted_at }}
+            </td>
+
+          </tr>
+
+          <tr class="recommendation-row">
+
+            <td colspan="5">
+              <strong>Recommendation:</strong>
+
+              {{ report.recommendation }}
+            </td>
+
+          </tr>
+
+          {% endfor %}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="no-progress">
+
+      <h3>No Quiz Reports Yet</h3>
+
+      <p>
+        Complete a quiz to see your learning progress here.
+      </p>
+
+      <a
+        href="{{ url_for('dashboard') }}"
+        class="start-learning-button"
+      >
+        Start Learning
+      </a>
+
+    </div>
+
+    {% endif %}
+
+  </main>
+
+</body>
+</html>
