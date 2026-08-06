@@ -3,6 +3,7 @@
 venv/
 venv-1
 
+
 # Environment Variables
 .env
 

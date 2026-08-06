@@ -12,18 +12,20 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 app = Flask(__name__)
 app.secret_key = "learnflow_secret_key"
 
 
 def get_db_connection():
     return mysql.connector.connect(
-        host=os.getenv("DB_HOST"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_NAME")
+        host=os.getenv("MYSQLHOST"),
+        port=int(os.getenv("MYSQLPORT")),
+        user=os.getenv("MYSQLUSER"),
+        password=os.getenv("MYSQLPASSWORD"),
+        database=os.getenv("MYSQLDATABASE")
     )
-
 
 # Study material for all topics
 materials = {
