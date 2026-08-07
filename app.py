@@ -533,8 +533,6 @@ quiz_questions = {
         }
     ]
 }
-
-
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -554,25 +552,40 @@ def login():
         cursor.close()
         connection.close()
 
-        if user and check_password_hash(user["password"], password):
-            session["user_id"] = user["user_id"]
-            session["user_name"] = user["full_name"]
-            session["user_email"] = user["email"]
+        # Email not registered
+        if not user:
+            flash("This email is not registered.", "error")
+            return render_template(
+                "login.html",
+                show_forgot_password=False
+            )
 
-            return redirect(url_for("dashboard"))
+        # Wrong password
+        if not check_password_hash(user["password"], password):
+            session["reset_email"] = email
 
-        session["reset_email"] = email
+            flash("Incorrect password.", "error")
 
-        return render_template(
-            "login.html",
-            show_forgot_password=True,
-            entered_email=email
-        )
+            return render_template(
+                "login.html",
+                show_forgot_password=True,
+                entered_email=email
+            )
+
+        # Login successful
+        session["user_id"] = user["user_id"]
+        session["user_name"] = user["full_name"]
+        session["user_email"] = user["email"]
+
+        flash("Login successful!", "success")
+
+        return redirect(url_for("dashboard"))
 
     return render_template(
         "login.html",
         show_forgot_password=False
     )
+
 
 
 import socket

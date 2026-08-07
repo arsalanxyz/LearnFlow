@@ -1,115 +1,83 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>LearnFlow- Login</title>
+    <title>LearnFlow- Login</title>
 
-  <link
-    rel="stylesheet"
-    href="{{ url_for('static', filename='css/style.css') }}"
-  >
-</head>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
 
-<body>
+  <body>
+    <div class="auth-container">
+      <div class="auth-card">
+        <!-- Logo -->
+        <div class="logo">
+          <h1>LearnFlow</h1>
 
-  <div class="auth-container">
-
-    <div class="auth-card">
-
-      <!-- Logo -->
-      <div class="logo">
-        <h1>LearnFlow </h1>
-
-        <p>"A Quiz and Learning Portal"</p>
-      </div>
-
-      <h2>Welcome Back</h2>
-
-      <!-- Flash Messages -->
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
-            <p class="message">{{ message }}</p>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
-
-      <!-- Login Form -->
-      <form method="POST">
-
-        <div class="input-group">
-          <label>Email Address</label>
-
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter your email"
-            value="{{ entered_email | default('') }}"
-            required
-          >
+          <p>"A Quiz and Learning Portal"</p>
         </div>
 
-        <div class="input-group">
-          <label>Password</label>
+        <h2>Welcome Back</h2>
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter your password"
-            required
-          >
-        </div>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, message in messages %}
+        <p class="message {{ category }}">{{ message }}</p>
+        {% endfor %} {% endif %} {% endwith %}
 
-        <button
-          type="submit"
-          class="main-button"
-        >
-          Login
-        </button>
+        <!-- Login Form -->
+        <form method="POST">
+          <div class="input-group">
+            <label>Email Address</label>
 
-      </form>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value="{{ entered_email | default('') }}"
+              required
+            />
+          </div>
 
-      <!-- Forgot Password -->
-      {% if show_forgot_password %}
+          <div class="input-group">
+            <label>Password</label>
 
-        <p class="message">
-          Invalid email or password or Account doesn't Exist.
-        </p>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
 
-        <form
-          action="{{ url_for('forgot_password') }}"
-          method="POST"
-        >
-          <button
-            type="submit"
-            class="forgot-password-button"
-          >
+          <button type="submit" class="main-button">Login</button>
+        </form>
+
+        <!-- Forgot Password -->
+        {% if show_forgot_password %}
+        <form action="{{ url_for('forgot_password') }}" method="POST">
+          <button type="submit" class="forgot-password-button">
             Forgot Password?
           </button>
         </form>
+        {% endif %}
 
-      {% endif %}
+        <!-- Register Link -->
+        <p class="bottom-text">
+          Don't have an account?
 
-      <!-- Register Link -->
-      <p class="bottom-text">
-        Don't have an account?
-
-        <a href="{{ url_for('register') }}">
-          Register
-        </a>
-      </p>
-
+          <a href="{{ url_for('register') }}"> Register </a>
+        </p>
+      </div>
     </div>
-
-  </div>
-<footer class="site-footer">
-    <p>Crafted by <strong>Sayed Arsalan Zaheer</strong></p>
-</footer>
-</body>
+    <footer class="site-footer">
+      <p>Crafted by <strong>Sayed Arsalan Zaheer</strong></p>
+    </footer>
+  </body>
 </html>
