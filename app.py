@@ -653,7 +653,8 @@ LearnFlow
 """
         )
 
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=10) as server:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 587, timeout=10) as server:
+            server.starttls()
             server.login(
                 os.getenv("EMAIL_ADDRESS"),
                 os.getenv("EMAIL_PASSWORD")
