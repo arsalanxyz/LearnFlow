@@ -572,6 +572,7 @@ def login():
 
 
 import socket
+import traceback
 
 socket.setdefaulttimeout(10)
 @app.route("/forgot-password", methods=["POST"])
@@ -665,11 +666,15 @@ LearnFlow
         flash("A new password has been sent to your email.")
 
     except Exception as error:
-        print("Email error:", error)
+         print("=" * 50)
+         print("EMAIL ERROR")
+         print(error)
+         traceback.print_exc()
+         print("=" * 50)
 
-        flash(
-            "The password was changed, but the email could not be sent."
-        )
+         flash(
+        "The password was changed, but the email could not be sent."
+    )
 
     return redirect(url_for("login"))
 
