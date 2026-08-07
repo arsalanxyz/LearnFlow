@@ -571,6 +571,9 @@ def login():
     )
 
 
+import socket
+
+socket.setdefaulttimeout(10)
 @app.route("/forgot-password", methods=["POST"])
 def forgot_password():
     email = session.get("reset_email")
@@ -649,7 +652,7 @@ LearnFlow
 """
         )
 
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=10) as server:
             server.login(
                 os.getenv("EMAIL_ADDRESS"),
                 os.getenv("EMAIL_PASSWORD")
