@@ -1,5 +1,4 @@
 import os
-import resend
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -7,11 +6,14 @@ import smtplib
 import secrets
 import string
 from email.message import EmailMessage
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
 
 from dotenv import load_dotenv
 
 load_dotenv()
-resend.api_key = os.getenv("RESEND_API_KEY")
+configuration = sib_api_v3_sdk.Configuration()
+configuration.api_key["api-key"] = os.getenv("BREVO_API_KEY")
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -602,7 +604,7 @@ def forgot_password():
         flash("This email is not registered.")
         return redirect(url_for("login"))
 
-    # Generate a random password
+    # Generate random password
     characters = (
         string.ascii_letters
         + string.digits
@@ -616,7 +618,7 @@ def forgot_password():
 
     hashed_password = generate_password_hash(new_password)
 
-    # Update password in database
+    # Update password
     cursor.execute(
         """
         UPDATE users
@@ -631,40 +633,73 @@ def forgot_password():
     cursor.close()
     connection.close()
 
-    # Send email
+    # Send email using Brevo
     try:
-        resend.api_key = os.getenv("RESEND_API_KEY")
-        resend.Emails.send({
-            "from": "LearnFlow <onboarding@resend.dev>",
-            "to": [email],
-            "subject": "LearnFlow - New Password",
-            "text": f"""Hello {user["full_name"]},
-        
+        api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+            sib_api_v3_sdk.ApiClient(configuration)
+        )
 
-    Your LearnFlow password has been reset.
+        sender = {
+            "name": "LearnFlow",
+            "email": os.getenv("EMAIL_ADDRESS")
+        }
 
-    Your new password is:
+        to = [
+            {
+                "email": email,
+                "name": user["full_name"]
+            }
+        ]
 
-    {new_password}
+        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+            sender=sender,
+            to=to,
+            subject="LearnFlow - New Password",
+            text_content=f"""Hello {user["full_name"]},
 
-    Please log in using this new password.
+Your LearnFlow password has been reset.
 
-    Regards,
-    LearnFlow
-    """
-        })
+Your new password is:
+
+{new_password}
+
+Please log in using this new password.
+
+Regards,
+LearnFlow
+"""
+        )
+
+        response = api_instance.send_transac_email(
+            send_smtp_email
+        )
+
+        print("Brevo Response:", response)
 
         session.pop("reset_email", None)
-        flash("A new password has been sent to your email.")
 
-    except Exception as error:
-        print("Resend Error:", error)
         flash(
-            "The password was changed, but the email could not be sent."
-            )
+            "A new password has been sent to your email.",
+            "success"
+        )
+
+    except ApiException as e:
+        print("Brevo API Error:", e)
+
+        flash(
+            "The password was changed, but the email could not be sent.",
+            "error"
+        )
+
+    except Exception as e:
+        print("Error:", e)
+
+        flash(
+            "Something went wrong while sending the email.",
+            "error"
+        )
 
     return redirect(url_for("login"))
-
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
