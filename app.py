@@ -1,4 +1,5 @@
 import os
+import resend
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,6 +11,7 @@ from email.message import EmailMessage
 from dotenv import load_dotenv
 
 load_dotenv()
+resend.api_key = os.getenv("RESEND_API_KEY")
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -631,51 +633,35 @@ def forgot_password():
 
     # Send email
     try:
-        message = EmailMessage()
+        resend.api_key = os.getenv("RESEND_API_KEY")
+        resend.Emails.send({
+            "from": "LearnFlow <onboarding@resend.dev>",
+            "to": [email],
+            "subject": "LearnFlow - New Password",
+            "text": f"""Hello {user["full_name"]},
+        
 
-        message["Subject"] = "LearnFlow - New Password"
-        message["From"] = os.getenv("EMAIL_ADDRESS")
-        message["To"] = email
+    Your LearnFlow password has been reset.
 
-        message.set_content(
-            f"""Hello {user["full_name"]},
+    Your new password is:
 
-Your LearnFlow password has been reset.
+    {new_password}
 
-Your new password is:
+    Please log in using this new password.
 
-{new_password}
-
-Please log in using this new password.
-
-Regards,
-LearnFlow
-"""
-        )
-
-        with smtplib.SMTP_SSL("smtp.gmail.com", 587, timeout=10) as server:
-            server.starttls()
-            server.login(
-                os.getenv("EMAIL_ADDRESS"),
-                os.getenv("EMAIL_PASSWORD")
-            )
-
-            server.send_message(message)
+    Regards,
+    LearnFlow
+    """
+        })
 
         session.pop("reset_email", None)
-
         flash("A new password has been sent to your email.")
 
     except Exception as error:
-         print("=" * 50)
-         print("EMAIL ERROR")
-         print(error)
-         traceback.print_exc()
-         print("=" * 50)
-
-         flash(
-        "The password was changed, but the email could not be sent."
-    )
+        print("Resend Error:", error)
+        flash(
+            "The password was changed, but the email could not be sent."
+            )
 
     return redirect(url_for("login"))
 
